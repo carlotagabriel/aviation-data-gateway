@@ -55,10 +55,6 @@ Execute the unit and integration tests using Maven:
 mvn test
 ```
 
-### 1\. Requisição de Sucesso (200 OK)
-
-Este comando solicita os dados de um aeroporto com um código ICAO válido, como `ATL`.
-
 ```bash
 curl -X GET http://localhost:8080/api/v1/airports/ATL
 ```
