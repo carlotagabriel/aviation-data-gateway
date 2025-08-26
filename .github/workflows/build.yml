@@ -1,63 +1,42 @@
-# GitHub Actions Workflow: Build and Test for Aviation Data Gateway
+# GitHub Actions Workflow: Build, Test, and Release for Aviation Data Gateway
 
-# 1. Workflow Name: Defines the name that appears in the GitHub Actions UI.
 name: Java CI with Maven
 
-# 2. Triggers: Specifies when this workflow should run.
 on:
-  # Run on pushes to the 'main' branch.
   push:
     branches: [ "main" ]
-  # Run on pull requests targeting the 'main' branch.
   pull_request:
     branches: [ "main" ]
 
-# 3. Jobs: A workflow run is made up of one or more jobs that can run sequentially or in parallel.
-jobs:
-  # The 'build' job is the only job in this workflow.
-  build:
-    # The type of runner that the job will run on. Using the latest Ubuntu version.
-    runs-on: ubuntu-latest
+permissions:
+  contents: write
 
-    # Steps represent a sequence of tasks that will be executed as part of the job.
+jobs:
+  build:
+    runs-on: ubuntu-latest
     steps:
-      # Step 1: Check out the repository code.
-      # This action checks-out your repository under $GITHUB_WORKSPACE, so your job can access it.
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up JDK 21.
-      # This action sets up a Java JDK, making the 'java' and 'mvn' commands available.
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
-          distribution: 'temurin' # A popular, open-source distribution of Java.
-          cache: maven # Caches Maven dependencies to speed up subsequent builds.
+          distribution: 'temurin'
+          cache: maven
 
-      # Step 3: Build with Maven.
-      # This command compiles the code, runs all tests (unit and integration),
-      # and packages the application into an executable JAR file.
-      # Using 'verify' instead of just 'package' ensures that integration tests are also run.
       - name: Build with Maven
         run: mvn -B verify --file pom.xml
 
-      # Step 4: Upload the JAR artifact.
-      # This step runs only if the build and test step is successful.
-      # It uses a standard GitHub action to upload the packaged JAR file as a build artifact.
       - name: Upload JAR Artifact
         uses: actions/upload-artifact@v4
         with:
-          # The name of the artifact as it will appear in the GitHub UI.
           name: aviation-data-gateway-jar
-          # The path to the file(s) to upload. The Spring Boot Maven plugin
-          # creates the JAR in the 'target' directory.
           path: target/*.jar
+
   create-release:
-    # Este job só será executado se o job 'build' for bem-sucedido
     needs: build
     runs-on: ubuntu-latest
-    # Executa apenas em pushes para o branch 'main', não em pull requests
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
