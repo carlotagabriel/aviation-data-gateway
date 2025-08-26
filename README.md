@@ -75,4 +75,4 @@ AI was used as a productivity tool to accelerate development in this project. It
 
 * **Documentation:** AI generated preliminary versions of documentation, such as the `README.md` and code comments, which served as a baseline.
 
-All AI-generated output served as a starting point. The code and documentation were subsequently reviewed, refactored where necessary, and extended. Furthermore, other parts of the project were developed entirely manually. The final architecture, business logic, and code quality are the result of this developer-led process.
+All AI-generated output served as a starting point. The code and documentation were subsequently reviewed, refactored where necessary, and extended.
